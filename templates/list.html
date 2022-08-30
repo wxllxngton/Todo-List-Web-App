@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Favicon -->
+        <link
+            rel="icon"
+            href="{{ url_for('static', filename='assets/notepad.png') }}"
+        />
+
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
+        />
+
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;900&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Allura&family=Edu+TAS+Beginner&family=Great+Vibes&family=Handlee&family=Parisienne&family=The+Nautigal&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- External CSS -->
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/style.css') }}"
+        />
+
+        <!-- Font Awesome Script -->
+        <script
+            src="https://kit.fontawesome.com/321779f561.js"
+            crossorigin="anonymous"
+        ></script>
+
+        <style>
+            body {
+                margin: 0px;
+                background-color: #f2fde3;
+            }
+            .jumbotron {
+                background-color: #f2fde3;
+            }
+
+            .sidebar {
+                margin: 0;
+                padding: 0;
+                width: 200px;
+                background-color: #e3f2fd;
+                position: fixed;
+                height: 100%;
+                overflow: auto;
+            }
+
+            .sidebar a {
+                display: block;
+                color: black;
+                padding: 16px;
+                text-decoration: none;
+            }
+
+            .sidebar a.active {
+                background-color: #fde3f2;
+                color: black;
+            }
+
+            .sidebar a:hover:not(.active) {
+                background-color: #fde3f2;
+                color: black;
+            }
+
+            div.content {
+                background-color: white;
+                margin-left: 200px;
+                padding: 1px 16px;
+                height: 1000px;
+            }
+            thead th {
+                position: sticky;
+                top: 0;
+            }
+            .fa-solid {
+                color: #f38ade;
+            }
+
+            @media screen and (max-width: 700px) {
+                .sidebar {
+                    width: 100%;
+                    height: auto;
+                    position: relative;
+                }
+                .sidebar a {
+                    float: left;
+                }
+                div.content {
+                    margin-left: 0;
+                }
+            }
+
+            @media screen and (max-width: 400px) {
+                .sidebar a {
+                    text-align: center;
+                    float: none;
+                }
+            }
+        </style>
+        <!-- External CSS -->
+        <title>Todo List</title>
+    </head>
+    <body>
+        <!-- List #1 is for important non-time-sensitive tasks (aka things you need to do eventually but not today). List #2 is for tasks you need to complete today. List #3 is for tasks that have been on your to-do list forever, but that you're never going to get done. -->
+        <!-- Sidebar section -->
+        <div class="sidebar">
+            <a
+                class="navbar-brand"
+                href="{{ url_for('home') }}"
+                style="margin-right: 0px"
+            >
+                <img
+                    src="{{ url_for('static', filename='assets/notepad.png') }}"
+                    width="30"
+                    height="30"
+                    class="d-inline-block align-top"
+                    alt=""
+                />
+                Todo List
+            </a>
+            <a href="{{ url_for('list') }}">Today</a>
+            <a href="{{ url_for('list_nts') }}">Non-Time-Sensitive</a>
+            <a href="{{ url_for('list_forever') }}">Forever</a>
+        </div>
+
+        <div class="content">
+            <div class="container-fluid">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="table-light">
+                            <th scope="col">
+                                <i class="fa-solid fa-hashtag"></i>
+                            </th>
+                            <th scope="col">
+                                <i class="fa-solid fa-cubes-stacked"></i>
+                            </th>
+                            <th scope="col">
+                                <i class="fa-solid fa-list-check"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in query %}
+                        <tr>
+                            <th scope="row">{{ t.id }}</th>
+                            <td>{{ t.task }}</td>
+                            <td>
+                                <a href="{{ url_for('complete', id=t.id) }}"
+                                    ><i
+                                        class="fa-solid fa-circle-check"
+                                        style="color: green"
+                                    ></i
+                                ></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- Form section -->
+                <form action="{{ url_for('add') }}" method="post">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Add Task</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Enter task"
+                            name="task_name"
+                        />
+                        <small id="emailHelp" class="form-text text-muted"
+                            >Hopefully it'll be shown in the task
+                            manager.</small
+                        >
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+                <!-- End of form section -->
+            </div>
+        </div>
+
+        <!-- End of sidebar section -->
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
